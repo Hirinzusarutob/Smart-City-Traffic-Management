@@ -1,0 +1,208 @@
+
+/* BENGALURU INTERACTIVE TRAFFIC MAP */
+
+.map-panel {
+    position: relative;
+    background: #111c2e;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 13px;
+    padding: 12px;
+    overflow: hidden;
+}
+
+#trafficMap {
+    width: 100%;
+    height: 490px;
+    border-radius: 9px;
+    background: #172438;
+    z-index: 1;
+}
+
+.map-legend {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 10px 8px 15px;
+}
+
+.map-legend span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #b5c2d6;
+    font-size: 10px;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-dot.high {
+    background: #ff5364;
+    box-shadow: 0 0 10px #ff5364;
+}
+
+.legend-dot.moderate {
+    background: #ffc34f;
+    box-shadow: 0 0 10px #ffc34f;
+}
+
+.legend-dot.low {
+    background: #22d6a0;
+    box-shadow: 0 0 10px #22d6a0;
+}
+
+.map-disclaimer {
+    color: #8393aa;
+    font-size: 9px;
+    padding: 12px 5px 3px;
+}
+
+/* MAP MARKERS */
+
+.traffic-marker {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 5px rgba(255,255,255,.15);
+}
+
+.traffic-marker.high {
+    background: #ff5364;
+    box-shadow: 0 0 0 5px rgba(255,83,100,.2);
+}
+
+.traffic-marker.moderate {
+    background: #ffc34f;
+    box-shadow: 0 0 0 5px rgba(255,195,79,.2);
+}
+
+.traffic-marker.low {
+    background: #22d6a0;
+    box-shadow: 0 0 0 5px rgba(34,214,160,.2);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: #14243a;
+    color: #f3f7ff;
+}
+
+.leaflet-popup-content {
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.map-popup-title {
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.map-popup-count {
+    color: #9eb4d2;
+}
+
+.map-popup-density {
+    font-weight: 800;
+}
+
+.map-popup-density.high { color: #ff6978; }
+.map-popup-density.moderate { color: #ffd071; }
+.map-popup-density.low { color: #35dfae; }
+
+.leaflet-container {
+    font-family: Inter, sans-serif;
+}
+
+@media(max-width:600px) {
+    #trafficMap {
+        height: 390px;
+    }
+
+    .map-legend {
+        justify-content: flex-start;
+        gap: 12px;
+    }
+}
+
+.route-planner {
+    margin-top: 22px;
+    padding: 22px;
+    border: 1px solid #26364d;
+    border-radius: 14px;
+    background: #101c30;
+    color: #eaf2ff;
+}
+
+.route-planner h2 {
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.route-planner p {
+    color: #91a6c4;
+    margin-bottom: 18px;
+}
+
+.route-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+}
+
+.route-inputs input {
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #344761;
+    border-radius: 8px;
+    background: #0a1425;
+    color: white;
+}
+
+.route-inputs button {
+    padding: 13px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #2878e5;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#routeMessage {
+    margin-top: 15px;
+    color: #a9c4e8;
+}
+
+.route-result {
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid #344761;
+    border-radius: 9px;
+    background: #14243b;
+}
+
+.route-result.recommended {
+    border-color: #20c997;
+}
+
+.route-result strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+@media (max-width: 750px) {
+    .route-inputs {
+        grid-template-columns: 1fr;
+    }
+}

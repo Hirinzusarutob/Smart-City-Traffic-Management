@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bengaluru Traffic Management</title>
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/map.css') }}">
+
+    <style>
+        #trafficMap {
+            width: 100%;
+            height: 550px;
+            min-height: 400px;
+            border-radius: 14px;
+            z-index: 1;
+        }
+
+        .route-planner {
+            margin-top: 22px;
+            padding: 22px;
+            border: 1px solid #26364d;
+            border-radius: 14px;
+            background: #101c30;
+            color: #eaf2ff;
+        }
+
+        .route-planner h2 {
+            margin-top: 0;
+        }
+
+        .route-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+        }
+
+        .route-inputs input {
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #344761;
+            border-radius: 8px;
+            background: #0a1425;
+            color: white;
+        }
+
+        .route-inputs button {
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: #2878e5;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .route-result {
+            margin-top: 12px;
+            padding: 15px;
+            border: 1px solid #344761;
+            border-radius: 9px;
+            background: #14243b;
+        }
+
+        .route-result.recommended {
+            border-color: #20c997;
+        }
+
+        .route-result p {
+            margin: 7px 0;
+        }
+
+        #routeMessage {
+            margin-top: 15px;
+        }
+
+        @media(max-width: 750px) {
+            .route-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            #trafficMap {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>SMART CITY</h2>
+            <p>Traffic Intelligence</p>
+        </div>
+
+        <nav>
+            <a href="#overview" class="nav-link active">Overview</a>
+            <a href="#traffic-section" class="nav-link">Traffic Map</a>
+            <a href="#junction-section" class="nav-link">Junctions</a>
+            <a href="#route-section" class="nav-link">Alternate Routes</a>
+            <a href="#dispatch-section" class="nav-link">Assistance</a>
+            <a href="#incident-section" class="nav-link">Incidents</a>
+            <a href="#signal-section" class="nav-link">Signals</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Bengaluru, Karnataka</p>
+            <small>Smart Traffic Demo</small>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="top-header">
+            <div>
+                <h1>Traffic Management Dashboard</h1>
+                <p>Smart Bengaluru Traffic Monitoring System</p>
+            </div>
+
+            <div class="date-display" id="currentDate"></div>
+        </header>
+
+
+        <!-- OVERVIEW -->
+        <section id="overview">
+            <h2>Traffic Overview</h2>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <p>Total Vehicles</p>
+                    <h2 id="totalVehicles">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>High Traffic</p>
+                    <h2 id="highCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Moderate Traffic</p>
+                    <h2 id="moderateCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Low Traffic</p>
+                    <h2 id="lowCount">0</h2>
+                </div>
+
+            </div>
+
+            <p>Last updated: <span id="lastUpdated">Waiting...</span></p>
+        </section>
+
+
+        <!-- MAP -->
+        <section id="traffic-section" class="dashboard-section">
+            <h2>Bengaluru Live Traffic Map</h2>
+
+            <div class="map-legend">
+                <span>🔴 High Traffic</span>
+                <span>🟡 Moderate Traffic</span>
+                <span>🟢 Low Traffic</span>
+            </div>
+
+            <div id="trafficMap"></div>
+        </section>
+
+
+        <!-- ALTERNATE ROUTE PLANNER -->
+        <section id="route-section" class="dashboard-section">
+
+            <div class="route-planner">
+
+                <h2>Smart Alternate Route Planner</h2>
+
+                <p>
+                    Find alternate driving routes to avoid junctions
+                    marked with high congestion.
+                </p>
+
+                <div class="route-inputs">
+
+                    <input
+                        type="text"
+                        id="routeSource"
+                        placeholder="Source (e.g. Majestic)"
+                    >
+
+                    <input
+                        type="text"
+                        id="routeDestination"
+                        placeholder="Destination (e.g. Silk Board)"
+                    >
+
+                    <button
+                        type="button"
+                        id="findRouteBtn"
+                        onclick="findAlternateRoutes()">
+                        Find Best Route
+                    </button>
+
+                </div>
+
+                <div id="routeMessage"></div>
+                <div id="routeResults"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- JUNCTIONS -->
+        <section id="junction-section" class="dashboard-section">
+            <h2>Traffic Junction Monitoring</h2>
+            <div id="junctionGrid" class="junction-grid"></div>
+        </section>
+
+
+        <!-- TRAFFIC ASSISTANCE -->
+        <section id="dispatch-section" class="dashboard-section">
+            <h2>Traffic Assistance Centre</h2>
+
+            <div class="dispatch-layout">
+
+                <div class="dispatch-form">
+                    <h3>Request Traffic Assistance</h3>
+
+                    <label for="dispatchJunction">Select Junction</label>
+
+                    <select id="dispatchJunction"></select>
+
+                    <label for="dispatchReason">Reason</label>
+
+                    <input
+                        type="text"
+                        id="dispatchReason"
+                        placeholder="Enter assistance reason"
+                    >
+
+                    <button id="requestDispatchBtn" type="button">
+                        Request Assistance
+                    </button>
+                </div>
+
+                <div class="dispatch-list-container">
+                    <h3>Assistance Requests</h3>
+                    <p>Total Requests: <span id="dispatchTotal">0</span></p>
+
+                    <div id="dispatchList"></div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- INCIDENTS -->
+        <section id="incident-section" class="dashboard-section">
+            <h2>Incident Reporting Centre</h2>
+
+            <div class="incident-layout">
+
+                <form id="incidentForm">
+                    <h3>Report Road Incident</h3>
+
+                    <label for="incidentTitle">Incident Description</label>
+
+                    <input
+                        type="text"
+                        id="incidentTitle"
+                        placeholder="Accident, road blockage, etc."
+                        required
+                    >
+
+                    <label for="incidentJunction">Select Junction</label>
+
+                    <select id="incidentJunction"></select>
+
+                    <button type="submit">Submit Incident</button>
+
+                    <p id="incidentMessage"></p>
+                </form>
+
+                <div>
+                    <h3>Reported Incidents</h3>
+                    <div id="incidentList"></div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- SIGNAL CONTROL -->
+        <section id="signal-section" class="dashboard-section">
+            <h2>Smart Signal Management</h2>
+            <div id="signalGrid" class="signal-grid"></div>
+        </section>
+
+
+        <footer style="margin-top:35px; padding:20px; text-align:center;">
+            <p>Smart Bengaluru Traffic Management System</p>
+            <small>Academic Hackathon Demonstration</small>
+        </footer>
+
+    </main>
+</div>
+
+
+<!-- LEAFLET MAP JS MUST LOAD BEFORE map.js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- PROJECT JAVASCRIPT -->
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/traffic.js') }}"></script>
+<script src="{{ url_for('static', filename='js/simulation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bengaluru | Intelligent Traffic Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+        }
+    }
+    </script>
+</head>
+
+<body>
+
+<div class="background-glow"></div>
+
+<nav class="landing-nav">
+    <a href="/" class="brand">
+        <span class="brand-symbol">✦</span>
+        SMART <span class="brand-blue">BENGALURU</span>
+    </a>
+
+    <div class="nav-center">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#technology">Technology</a>
+    </div>
+
+    <a href="/dashboard" class="nav-button">OPEN DASHBOARD ↗</a>
+</nav>
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            <span class="pulse"></span>
+            NEXT GENERATION URBAN MOBILITY
+        </div>
+
+        <h1>
+            Building a<br>
+            <span>Smarter City.</span><br>
+            One Road at a Time.
+        </h1>
+
+        <p class="hero-description">
+            An intelligent traffic management platform designed to
+            monitor road conditions, visualize congestion and support
+            smarter traffic decisions across Bengaluru.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/dashboard" class="primary-button">
+                Explore Dashboard <span>→</span>
+            </a>
+
+            <a href="#about" class="secondary-button">
+                Discover More
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div>
+                <strong>3D MODEL</strong>
+                <small>Smart City Visualization</small>
+            </div>
+
+            <div>
+                <strong>AI READY</strong>
+                <small>Traffic Intelligence</small>
+            </div>
+
+            <div>
+                <strong>REAL TIME*</strong>
+                <small>Monitoring Interface</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="visual-container">
+
+        <div class="visual-label">
+            <span class="pulse"></span>
+            SMART CITY 3D VISUALIZATION
+        </div>
+
+        <div id="city-scene"></div>
+
+        <div class="glass-card card-top">
+            <span class="mini-label">TRAFFIC SYSTEM</span>
+            <strong>Intelligent Monitoring</strong>
+            <small>3D City Simulation</small>
+        </div>
+
+        <div class="glass-card card-bottom">
+            <div class="signal-indicator"></div>
+
+            <div>
+                <strong>Smart Traffic Control</strong>
+                <small>Adaptive traffic visualization</small>
+            </div>
+
+            <span class="online-tag">DEMO MODE</span>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="intro-section" id="about">
+
+    <span class="section-tag">ABOUT THE PROJECT</span>
+
+    <h2>Making Urban Mobility Smarter</h2>
+
+    <p>
+        Smart Bengaluru is a smart-city traffic management concept
+        that combines interactive visualization, traffic monitoring
+        and intelligent decision support to improve urban mobility.
+    </p>
+
+</section>
+
+<section class="intro-section technology-section" id="technology">
+
+    <span class="section-tag">OUR TECHNOLOGY</span>
+
+    <h2>Designed for the Cities of Tomorrow</h2>
+
+    <p>
+        Explore the key components of our intelligent traffic
+        management platform.
+    </p>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <span>◈</span>
+            <h3>3D Smart City</h3>
+            <p>
+                Explore an animated 3D city environment with moving
+                vehicles and an interactive urban visualization.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <span>◎</span>
+            <h3>Traffic Intelligence</h3>
+            <p>
+                Monitor traffic density and identify congestion
+                using traffic data and visualization.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <span>⌖</span>
+            <h3>Smart Assistance</h3>
+            <p>
+                Demonstrate an intelligent traffic assistance
+                workflow for reporting and managing incidents.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    <span>© 2026 SMART BENGALURU</span>
+    <span>Intelligent Traffic Management System | Hackathon Project</span>
+</footer>
+
+<script type="module">
+import * as THREE from 'three';
+
+const container = document.getElementById('city-scene');
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x101e35);
+scene.fog = new THREE.Fog(0x101e35, 35, 100);
+
+const camera = new THREE.PerspectiveCamera(
+    45,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    200
+);
+
+camera.position.set(22, 24, 30);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+});
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.shadowMap.enabled = true;
+
+container.appendChild(renderer.domElement);
+
+// Lighting
+scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+
+const light = new THREE.DirectionalLight(0xffffff, 2);
+light.position.set(10, 20, 10);
+scene.add(light);
+
+// Ground
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(100, 100),
+    new THREE.MeshStandardMaterial({ color: 0x101d30 })
+);
+
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.1;
+scene.add(ground);
+
+// Roads
+function createRoad(width, height, x, z) {
+    const road = new THREE.Mesh(
+        new THREE.PlaneGeometry(width, height),
+        new THREE.MeshStandardMaterial({ color: 0x26354a })
+    );
+
+    road.rotation.x = -Math.PI / 2;
+    road.position.set(x, 0, z);
+    scene.add(road);
+}
+
+createRoad(100, 12, 0, 0);
+createRoad(12, 100, 0, 0);
+
+// Road markings
+for (let i = -45; i <= 45; i += 8) {
+    const line = new THREE.Mesh(
+        new THREE.PlaneGeometry(3, 0.18),
+        new THREE.MeshBasicMaterial({ color: 0x9eb9d8 })
+    );
+
+    line.rotation.x = -Math.PI / 2;
+    line.position.set(i, 0.02, 0);
+    scene.add(line);
+}
+
+// Buildings
+const buildingColors = [0x24466c, 0x315579, 0x293f60, 0x3b4e70];
+
+for (let x = -40; x <= 40; x += 10) {
+    for (let z = -40; z <= 40; z += 10) {
+
+        if (Math.abs(x) < 12 || Math.abs(z) < 12) continue;
+
+        const height = 3 + Math.random() * 12;
+
+        const building = new THREE.Mesh(
+            new THREE.BoxGeometry(5, height, 5),
+            new THREE.MeshStandardMaterial({
+                color: buildingColors[
+                    Math.floor(Math.random() * buildingColors.length)
+                ]
+            })
+        );
+
+        building.position.set(x, height / 2, z);
+        scene.add(building);
+    }
+}
+
+// Cars
+const cars = [];
+
+function createCar(color, lane, startPosition) {
+
+    const car = new THREE.Group();
+
+    const body = new THREE.Mesh(
+        new THREE.BoxGeometry(1.8, 0.65, 3.2),
+        new THREE.MeshStandardMaterial({ color })
+    );
+
+    body.position.y = 0.55;
+    car.add(body);
+
+    const cabin = new THREE.Mesh(
+        new THREE.BoxGeometry(1.35, 0.65, 1.6),
+        new THREE.MeshStandardMaterial({ color: 0x8bbce8 })
+    );
+
+    cabin.position.set(0, 1.1, -0.2);
+    car.add(cabin);
+
+    car.position.set(lane, 0, startPosition);
+
+    scene.add(car);
+    cars.push(car);
+}
+
+for (let i = 0; i < 9; i++) {
+    createCar(
+        i % 2 === 0 ? 0x278cff : 0x8b75ff,
+        -3 + (i % 3) * 3,
+        -35 + i * 9
+    );
+}
+
+// Animation
+function animate() {
+    requestAnimationFrame(animate);
+
+    cars.forEach((car, index) => {
+        car.position.z += 0.12 + (index % 3) * 0.025;
+
+        if (car.position.z > 40) {
+            car.position.z = -40;
+        }
+    });
+
+    renderer.render(scene, camera);
+}
+
+animate();
+
+// Responsive
+window.addEventListener('resize', () => {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(width, height);
+});
+</script>
+
+</body>
+</html>
